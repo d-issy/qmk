@@ -1,3 +1,5 @@
+muc ?= atmega32u4
+
 help:
 	@echo "help\n" \
 		"make keyboard/layout"
@@ -14,11 +16,7 @@ help:
 %/send:
 	$(eval keyboard := $(firstword $(subst /, ,$*)))
 	$(eval keymap := $(word 2, $(subst /, ,$*)))
-	docker run --rm -it \
-		-e hex=$(keyboard)_$(keymap) \
-		-v $(shell pwd)/.build:/qmk/.build:ro \
-		--privileged \
-		minodisk/teensy_loader:0.0.1
+	teensy_loader_cli --mcu=$(muc) -w .build/$(keyboard)_$(keymap).hex
 
 .PHONY: ergodox_ez/*
 ergodox_ez/default:     ergodox_ez/default/build
